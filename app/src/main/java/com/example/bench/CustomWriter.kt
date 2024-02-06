@@ -39,7 +39,7 @@ class CustomWriter : Writer() {
         }
 
         try {
-            bufferedWriter = BufferedWriter(FileWriter(logFile, true), 5 * 1024)
+            bufferedWriter = BufferedWriter(FileWriter(logFile, true), 100 * 1024)
             if (isNewFile) {
                 onNewFileCreated(logFile!!)
             }

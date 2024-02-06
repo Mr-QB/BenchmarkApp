@@ -63,14 +63,21 @@ class BenchApp {
 
         Button(onClick = {
             if (fileContentPath != null) {
-                writeTextFileToLog(customLogPrinter, fileContentPath)
+                startPushMsgToQueueLogThread(customLogPrinter)
+//                writeTextFileToLog(customLogPrinter, fileContentPath)
             }
         }) {
             Text(text = "Bench...")
         }
     }
+    private fun startPushMsgToQueueLogThread(filePrinter: FilePrinter){
+        val pushQueueThread = Thread{
+            pushMsgToQueueLog(filePrinter)
+        }
+        pushQueueThread.start()
+    }
 
-    private fun writeTextFileToLog(filePrinter: FilePrinter, filePath: String) {
+    private fun pushMsgToQueueLog(filePrinter: FilePrinter) {
         var lineCount = 0
         var dataSize = 0
         var msg = ""
