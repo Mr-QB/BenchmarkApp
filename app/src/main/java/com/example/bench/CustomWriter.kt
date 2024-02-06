@@ -13,11 +13,15 @@ class CustomWriter : Writer() {
     private var logFileName: String? = null
     private var logFile: File? = null
     private var bufferedWriter: BufferedWriter? = null
+    val timer = Timer()
+    var timerIsRunning = false
+
     override fun open(file: File): Boolean {
         logFileName = file.name
         logFile = file
 
         var isNewFile = false
+
 
         if (!logFile!!.exists()) {
             try {
@@ -64,12 +68,18 @@ class CustomWriter : Writer() {
     }
 
     private fun startFlushTimer() {
-        Timer().scheduleAtFixedRate(object : TimerTask() {
+        timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 flushBuffer()
                 XLog.tag("checkThread").d("Thread writing log to file: ${Thread.currentThread().name}")
             }
         }, 0, 2000)
+        timerIsRunning = true
+    }
+
+    private fun cancelFlushTimer(){
+        timer.cancel()
+        timerIsRunning
     }
 
     private fun flushBuffer() {
